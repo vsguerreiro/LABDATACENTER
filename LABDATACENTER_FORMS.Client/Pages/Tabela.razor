@@ -1,0 +1,90 @@
+﻿@page "/tabela"
+
+@inject FormDataService formDataService
+
+<PageTitle>Tabela</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Tabela</MudText>
+</MudPaper>
+
+
+<MudTable Items="@formDataService.TableData" Hover="true" Breakpoint="Breakpoint.None" Loading="false" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Formulário</MudTh>
+        <MudTh>Número de funcionário</MudTh>
+        <MudTh>Data de Submissão</MudTh>        
+        <MudTh>Fornecedor</MudTh>
+        <MudTh>NIF do Fornecedor</MudTh>
+        <MudTh>Tipo de Requisição</MudTh>
+        <MudTh>Descricao do Material</MudTh>
+        <MudTh>Local de Entrega</MudTh>
+        <MudTh>Preço sem IVA</MudTh>
+        <MudTh>PortesSemIva</MudTh>
+        <MudTh>Valor do Adiantamento</MudTh>
+        <MudTh>Justificação/ Observações</MudTh>
+        <MudTh>Data Pretendida</MudTh>
+        <MudTh>Centro de Custo/PEP</MudTh>
+        <MudTh>Adiantamento</MudTh>
+        <MudTh>Descrição do Adiantamento</MudTh>
+        <MudTh>Número de Ordem de Investimento</MudTh>
+        <MudTh>Código de Serviço</MudTh>
+        <MudTh>Data de Levantamento</MudTh>
+        <MudTh>Data de Entrega</MudTh>
+        <MudTh>Modelo da Viatura</MudTh>
+        <MudTh>Nome dos Condutores</MudTh>
+        <MudTh>Carta de Condução</MudTh>
+        <MudTh>Contato dos Condutores</MudTh>
+        <MudTh>Hotel de preferência</MudTh>
+        <MudTh>Data Início</MudTh>
+        <MudTh>Data Fim</MudTh>
+        <MudTh>Observações</MudTh>
+        <MudTh>Meio de Transporte</MudTh>
+       
+
+    </HeaderContent>
+    <RowTemplate Context="formData">
+        <MudTh>@formData.Id</MudTh>
+        <MudTd>@formData.Formulario</MudTd>
+        <MudTd>@formData.NumeroFuncionario</MudTd>
+        <MudTd>@formData.Date</MudTd>        
+        <MudTd>@formData.Fornecedor</MudTd>
+        <MudTd>@formData.NifFornecedor</MudTd>
+        <MudTd>@formData.TipoRequisicao</MudTd>
+        <MudTd>@formData.DescricaoMaterial</MudTd>
+        <MudTd>@formData.LocalEntrega</MudTd>
+        <MudTd>@formData.PrecoSemIva</MudTd>
+        <MudTd>@formData.PortesSemIva</MudTd>
+        <MudTd>@formData.ValorDoAdiantamento</MudTd>
+        <MudTd>@formData.Justificacao</MudTd>
+        <MudTd>@formData.DataPretendida</MudTd>
+        <MudTd>@formData.CentroDeCustoOuPep</MudTd>
+        <MudTh>@formData.Adiantamento</MudTh>
+        <MudTh>@formData.AdiantamentoDescricao</MudTh>
+        <MudTh>@formData.NumeroOrdemInvestimento</MudTh>
+        <MudTh>@formData.CodigoServico</MudTh>
+        <MudTh>@formData.DataLevantamento</MudTh>
+        <MudTh>@formData.DataEntrega</MudTh>
+        <MudTh>@formData.ModeloViatura</MudTh>
+        <MudTd>@formData.NomeCondutores</MudTd>
+        <MudTh>@formData.CcCondutores</MudTh>
+        <MudTh>@formData.ContatoCondutores</MudTh>
+        <MudTd>@formData.HotelPreferencia</MudTd>
+        <MudTh>@formData.DataInicio</MudTh>
+        <MudTh>@formData.DataFim</MudTh>
+        <MudTh>@formData.Observacoes</MudTh>
+        <MudTh>@formData.MeioTransporte</MudTh>
+        
+
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+
+}

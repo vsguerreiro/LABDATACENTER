@@ -1,0 +1,138 @@
+﻿@page "/marcacaoviagem"
+
+@inject FormDataService formDataService
+@inject ISnackbar Snackbar
+
+<PageTitle>MarcacaoViagem</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Marcação de Viagem</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    <MudForm @ref="form" Model="@formData" @bind-IsValid="@success">
+
+        <MudTextField Class="d-flex mt-6" Name="localEntrega" @bind-Value="formData.LocalEntrega" Label="Destino da Viagem" Variant="Variant.Outlined"
+                      Required="true" RequiredError="É necessário indicar o destino da viagem" />
+
+        <MudPaper Elevation="0" Class="mt-10">
+            <MudItem>
+                <MudDateRangePicker @bind-DateRange="_dateRange" Color="Color.Info" Variant="Variant.Outlined" Label="Duração da Viagem"/>
+            </MudItem>
+        </MudPaper>
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.MeioTransporte" Label="Meio de Transporte" 
+            AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+            <MudSelectItem Value="@("Viatura ISQ")" />
+            <MudSelectItem Value="@("Viatura Alugada")" />
+            <MudSelectItem Value="@("Barco")" />
+            <MudSelectItem Value="@("Comboio")" />
+            <MudSelectItem Value="@("Avião")" />
+        </MudSelect>
+
+        <MudTextField Class="d-flex mt-10" id="justificacao" @bind-Value="formData.Justificacao" Label="Notas do Meio de Transporte" 
+            Variant="Variant.Outlined" Lines="3" HelperText="Introduza a sua resposta" />
+
+        <MudTextField Class="d-flex mt-10" Name="hotelPreferencia" @bind-Value="formData.HotelPreferencia" Label="Nome do Alojamento" Variant="Variant.Outlined" />
+
+        <MudPaper Class="mt-10 pa-4 mud-paper-outline " Elevation="0" Outlined="true">
+            <MudText Typo="Typo.body1" Class="input-text-color">Adiantamento</MudText>
+            <MudItem Class="pa-3">
+                <MudRadioGroup Name="adiantamento" @bind-Value="formData.Adiantamento">
+                    <MudRadio Value=@("Sem adiantamento") Color="Color.Info">Sem adiantamento</MudRadio>
+                    <MudRadio Value=@("Com adiantamento") Color="Color.Info">Com adiantamento</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+
+
+            @if (formData.Adiantamento == "Com adiantamento")
+            {
+                <MudTextField Class="d-flex mt-3 pt-0 animated-textfield slideDown" id="adiantamentoDescricao" @bind-Value="formData.AdiantamentoDescricao"
+                              Label="Forma de Adiantamento" Variant="Variant.Text" Style="animation: slideDown 0.5s ease-in-out;" />
+            }
+            else
+            {
+                <MudTextField Class="d-flex mt-3 pa-0 animated-textfield slideUp" id="adiantamentoDescricao" @bind-Value="formData.AdiantamentoDescricao"
+                              Label="Forma de Adiantamento" Variant="Variant.Text" Style="animation: slideUp 0.5s ease-in-out;" />
+            }
+
+        </MudPaper>
+
+@*         <MudPaper Elevation="0" Class="mt-6 pa-4 mud-paper-outline" Outlined="true">
+            <MudText Typo="Typo.body1" Class="d-flex pb-4" Style="color: gray">Adiantamento</MudText>
+            <MudItem xs="10" md="1" Class="pa-0">
+                <MudRadioGroup Name="adiantamento" @bind-Value="formData.Adiantamento">
+                    <MudRadio Value=@("Sim") Color="Color.Info">Sim</MudRadio>
+                    <MudRadio Value=@("Não") Color="Color.Info">Não</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+        </MudPaper> *@
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.CentroDeCustoOuPep"
+                   Label="Centro de Custo ou PEP" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Normal" Required="true">
+            <MudSelectItem Value="@("AAA")" />
+        </MudSelect>
+
+        <MudStack Style="width: 100%">
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                           AppendMultipleFiles
+                           OnFilesChanged="OnInputFileChanged"
+                           Hidden="@false"
+                           InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+                           InputStyle="opacity:0"
+                           @ondragenter="@SetDragClass"
+                           @ondragleave="@ClearDragClass"
+                           @ondragend="@ClearDragClass">
+                <ActivatorContent>
+                    <MudPaper Height="150px"
+                              Outlined="true"
+                              Class="@_dragClass">
+                        <MudText Typo="Typo.h6">
+                            Anexos - arraste para aqui ficheiros ou clique neste campo
+                        </MudText>
+                        @foreach (var file in _fileNames)
+                        {
+                            <MudChip T="string" Color="Color.Dark" Text="@file" />
+                        }
+                    </MudPaper>
+                    <MudToolBar Gutters="true" Class="relative d-flex justify-end gap-4 z-30">
+                        <MudButton HtmlTag="label" Color="Color.Info" for="orcamento" Variant="Variant.Filled">Open file picker</MudButton>
+                        <MudButton OnClick="@LoadFiles" Color="Color.Info" Disabled="@(!_fileNames.Any())" Variant="Variant.Filled">Upload</MudButton>
+                        <MudButton OnClick="@Clear" Color="Color.Error" Disabled="@(!_fileNames.Any())" Variant="Variant.Filled">Clear</MudButton>
+                    </MudToolBar>
+                </ActivatorContent>
+            </MudFileUpload>
+        </MudStack>
+
+        <MudTextField Class="d-flex mt-10" id="justificacao" @bind-Value="formData.Justificacao" Label="Observações" Variant="Variant.Outlined" Lines="3" HelperText="Introduza a sua resposta" />
+
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="openConfirmationDialog"
+                   Color="@(IsFormFilled() ? Color.Success : Color.Error)" FullWidth="true">Submeter</MudButton>
+
+        <MudDialog @bind-Visible="showConfirmationDialog">
+            <TitleContent>
+                <MudText Typo="Typo.h5">Confirme a submissão</MudText>
+            </TitleContent>
+            <DialogContent>
+                <MudText Class="mb-3" Typo="Typo.h6">Resumo da informação a ser submetida:</MudText>
+                <MudText Class="mb-1">Destino da Viagem: @formData.LocalEntrega</MudText>
+                <MudText Class="mb-1">Duração da Viagem: @(_dateRange != null ? $"{_dateRange.Start:dd/MM/yyyy} - {_dateRange.End:dd/MM/yyyy}" : "Não definida")</MudText>
+                <MudText Class="mb-1">Meio de Transporte: @formData.MeioTransporte</MudText>
+                <MudText Class="mb-1">Notas do Meio de Transporte: @formData.Justificacao</MudText>
+                <MudText Class="mb-1">Nome do Alojamento: @formData.HotelPreferencia</MudText>
+                <MudText Class="mb-1">Adiantamento: @formData.Adiantamento</MudText>
+                <MudText Class="mb-1">
+                    @if (formData.Adiantamento == "Com adiantamento")
+                    {
+                        <MudText>Forma de adiantamento: @formData.AdiantamentoDescricao</MudText>
+                    }
+                </MudText>
+                <MudText Class="mb-1">Centro de custo ou PEP: @formData.CentroDeCustoOuPep</MudText>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="HandleSubmit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">Confirmar</MudButton>
+                <MudButton OnClick="() => showConfirmationDialog = false" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">Cancelar</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </MudForm>
+</MudPaper>

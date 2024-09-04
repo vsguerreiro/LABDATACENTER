@@ -1,0 +1,162 @@
+﻿@page "/rncanaliseocorrencia"
+
+@inject FormRelatorioNaoConformidadeService formRelatorioNaoConformidadeService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>RncAnaliseOcorrencia</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">2. Análise da Ocorrência</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    <MudForm @ref="form" Model="@formRelatorioNaoConformidade" @bind-IsValid="@success">
+
+        <MudTextField Class="d-flex mt-6" @bind-Value="formRelatorioNaoConformidade.DescricaoOcorrencia" Label="Identificação da causa e sua extensão"
+                      Variant="Variant.Outlined" Lines="12" Placeholder="" />
+        <MudPaper Class="d-flex mt-10 pa-3 ">
+
+            <MudGrid Spacing="1" Justify="Justify.Center">
+                <MudItem xs="1">
+                    <MudButton Class="d-flex align-center justify-center pa-2" Variant="Variant.Filled" OnClick="@ToggleOpen">Nível de risco</MudButton>
+                    <MudItem Class="d-flex align-center justify-center mud-width-full mud-height-full"
+                             Style="transform: rotate(-90deg); text-align: center;">
+                        GRAVIDADE DE IMPACTE/CONSEQUENCIA
+                    </MudItem>
+
+                    <MudPopover Open="@_openPopover" Fixed="true" Class="px-4 pt-4">
+                        <div class="d-flex flex-column">
+                            <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                            <MudImage Src="/Images/niveis_risco.png" Fluid="true" Class="rounded-lg" />
+
+                        </div>
+                    </MudPopover>
+
+
+                </MudItem>
+
+                <MudItem xs="11">
+                    <MudButtonGroup Class="d-flex align-center justify-center mud-width-full mud-height-full pa-0" Variant="Variant.Filled"
+                                    Style="box-shadow: none;">
+                        <MudGrid Spacing="1" Justify="Justify.Center">
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-center py-3"></MudItem>
+                            </MudItem>
+                            <MudItem xs="9">
+                                <MudItem Class="d-flex align-center justify-center mud-width-full py-4">PROBABILIDADE DE OCORRÊNCIA/FRQUÊNCIA</MudItem>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-center  py-3"
+                                         Style="text-align: center;"></MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudItem Class="d-flex align-center justify-center mud-width-full pa-3"
+                                         Style="text-align: center;">Mto Improvável<br />&le; 1</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudItem Class="d-flex align-center justify-center mud-width-full pa-3"
+                                         Style="text-align: center;">Improvável<br />&ge;2 &lt; 5</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudItem Class="d-flex align-center justify-center mud-width-full py-3"
+                                         Style="text-align: center;">Provável<br />&ge;5 &gt; 10</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudItem Class="d-flex align-center justify-center mud-width-full py-3"
+                                         Style="text-align: center;">Mto Provável<br />&ge;10</MudItem>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-end mud-width-full py-8"
+                                         Style="">Baixa</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: lightgreen;">1</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: lightgreen;">2</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">3</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">4</MudButton>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-end mud-width-full py-8"
+                                         Style="">Média</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: lightgreen;">2</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">4</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">6</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: orange;">8</MudButton>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-end mud-width-full py-8"
+                                         Style="">Alta</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">3</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">6</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: orange;">9</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: red;">12</MudButton>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudItem Class="d-flex align-center justify-end mud-width-full py-8"
+                                         Style="">Muito Alta</MudItem>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: yellow;">4</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: orange;">8</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: red;">12</MudButton>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudButton Class="d-flex align-center justify-center mud-width-full py-8" Style="background-color: red;">16</MudButton>
+                            </MudItem>
+
+                        </MudGrid>
+                    </MudButtonGroup>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <MudPaper Class="mt-10 pa-4 mud-paper-outline " Elevation="0" Outlined="true">
+            <MudText Typo="Typo.body1" Class="input-text-color">Requer ou necessita Ação Corretiva / Preventiva / Melhoria?</MudText>
+            <MudItem Class="pa-3">
+                <MudRadioGroup Name="rececaoReclamante" @bind-Value="formRelatorioNaoConformidade.RequerAcao">
+                    <MudRadio Value=@("Sim") Color="Color.Info">Sim</MudRadio>
+                    <MudRadio Value=@("Não") Color="Color.Info">Não</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+        </MudPaper>
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formRelatorioNaoConformidade.ResponsavelAnalise" Variant="Variant.Outlined"
+                   Label="Responsável pela análise" AnchorOrigin="Origin.BottomCenter" Required="true" Placeholder="">
+            <MudSelectItem Value="@("Responsável 1")" />
+            <MudSelectItem Value="@("Responsável 2")" />
+            <MudSelectItem Value="@("Responsável 3")" />
+        </MudSelect>
+
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="HandleSubmit"
+                   Color="Color.Success" FullWidth="true">Submeter</MudButton>
+
+
+    </MudForm>
+</MudPaper>

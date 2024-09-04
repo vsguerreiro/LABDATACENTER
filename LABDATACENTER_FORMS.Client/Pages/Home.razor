@@ -1,0 +1,66 @@
+﻿@page "/"
+
+@if (ShowProgress)
+{
+    <MudContainer Fixed="true" Style="margin-top:35%">
+        <MudProgressLinear Color="Color.Error" Rounded="true" Indeterminate="true" Class="my-7" Size="Size.Large" />
+        <MudRTLProvider RightToLeft="true">
+            <MudProgressLinear Color="Color.Warning" Rounded="true" Indeterminate="true" Class="my-7" Size="Size.Large" />
+        </MudRTLProvider>
+        <MudProgressLinear Color="Color.Error" Rounded="true" Indeterminate="true" Class="my-7" Size="Size.Large" />
+    </MudContainer>
+}
+ 
+else
+{
+
+    <PageTitle>Formulários</PageTitle>
+
+    <MudPaper HtmlTag="h1" Elevation="10" Class="mt-10 mb-10 pa-4 mud-paper-header">
+        <MudText Typo="Typo.h2" Align="Align.Center">Formulários Labmetro</MudText>
+    </MudPaper>
+
+    <MudCarousel Class="mud-width-full" Style="height:400px" ShowArrows="false" ShowBullets="false" AutoCycle="true" 
+            AutoCycleTime="@(TimeSpan.FromSeconds(5))" TData="object" >
+        <MudCarouselItem Transition="Transition.Slide" >
+            <div class="d-flex justify-center" style="height:100%">
+                <MudImage Class="rounded-lg mud-width-full" Alt="Airport" Fluid="true" Src="/images/carousel/airport.webp" />
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="Transition.Fade" >
+            <div class="d-flex justify-center" style="height:100%">
+                <MudImage Class="rounded-lg mud-width-full" Alt="Money" Fluid="true" Src="/images/carousel/money.jpg" />
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="Transition.Fade">
+            <div class="d-flex justify-center" style="height:100%">
+                <MudImage Class="rounded-lg mud-width-full" Alt="Hotel" Fluid="true" Src="/images/carousel/hotel.webp" />
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="Transition.Slide">
+            <div class="d-flex justify-center" style="height:100%">
+                <MudImage Class="rounded-lg mud-width-full" Alt="Car" Fluid="true" Src="/images/carousel/car.jpg" />
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="Transition.Fade">
+            <div class="d-flex justify-center" style="height:100%">
+                <MudImage Class="rounded-lg mud-width-full" Alt="Business" Fluid="true" Src="/images/carousel/business.jpeg" />
+            </div>
+        </MudCarouselItem>
+    </MudCarousel>
+}
+
+
+@code {
+    private bool ShowProgress = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(800);
+            ShowProgress = false;
+            StateHasChanged();
+        }
+    }
+}

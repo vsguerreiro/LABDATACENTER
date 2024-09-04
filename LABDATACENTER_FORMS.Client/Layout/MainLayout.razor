@@ -1,0 +1,97 @@
+﻿@inherits LayoutComponentBase
+
+@* @using LABDATACENTER_FORMS.Models *@
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="@_selectedTheme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+
+    <MudAppBar Elevation="4">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleMainDrawer" />
+
+        <MudAvatar Size="Size.Medium" Square="true" Variant="Variant.Outlined">M</MudAvatar>
+
+        <MudSpacer />
+
+        <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" Class="ml-4" T="bool" Label="Dark Mode" />
+
+        <MudIconButton Icon="@Icons.Material.Filled.DisplaySettings" Color="Color.Inherit" Edge="Edge.End" OnClick="ToggleThemeDrawer" />
+
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_isMainDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="5" Variant="@DrawerVariant.Responsive">
+        <MudNavMenu>
+            <NavMenu />
+        </MudNavMenu>
+        <MudSpacer />
+        <MudImage ObjectFit="ObjectFit.Contain" Fluid="true" Src="@_logoSrc" Alt="Logos" Style=" margin-bottom: 15px; height: 50px" />
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer Class="page-content" MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+
+    <MudDrawer @bind-Open="_isThemeDrawerOpen" Anchor="Anchor.Right" Elevation="3" Variant="DrawerVariant.Temporary" Width="150px">
+        <MudDrawerHeader Class="pa-4 justify-center">
+            <MudText Typo="Typo.h6" Style="text-decoration:underline">Themes</MudText>
+        </MudDrawerHeader>
+        <MudButtonGroup Variant="Variant.Text" Vertical="true" Class="ma-2">
+            @foreach (var theme in _themes)
+            {
+                <MudButton @onclick="() => SwitchTheme(theme.Value)">@theme.Key</MudButton>
+            }
+        </MudButtonGroup>
+    </MudDrawer>
+
+</MudLayout>
+
+
+@code {
+
+    private bool _isDarkMode;
+
+    private bool _isMainDrawerOpen = true;
+    private bool _isThemeDrawerOpen = false;
+
+    private string _logoSrc = "/Images/Logos_RED_Todos.png";
+
+    private MudTheme _selectedTheme = MyTheme.BlueGrayTheme;
+
+    public void ToggleMainDrawer() => _isMainDrawerOpen = !_isMainDrawerOpen;
+    public void ToggleThemeDrawer() => _isThemeDrawerOpen = !_isThemeDrawerOpen;
+
+    public void SwitchTheme(MudTheme theme)
+    {
+        _selectedTheme = theme;
+        _logoSrc = _themeLogos[theme];
+    }
+
+    private readonly Dictionary<MudTheme, string> _themeLogos = new()
+    {
+        { MyTheme.DefaultTheme, "/Images/Logos_PRIMARY_Todos.png" },
+        { MyTheme.CyanTheme, "/Images/Logos_PRIMARY_Todos.png" },
+        { MyTheme.RedTheme, "/Images/Logos_RED_Todos.png" },
+        { MyTheme.IndigoTheme, "/Images/Logos_PRIMARY_Todos.png" },
+        { MyTheme.DeepPurpleTheme, "/Images/Logos_PRIMARY_Todos.png" },
+        { MyTheme.TealTheme, "/Images/Logos_PRIMARY_Todos.png" },
+        { MyTheme.OrangeTheme, "/Images/Logos_RED_Todos.png" },
+        { MyTheme.BlueGrayTheme, "/Images/Logos_PRIMARY_Todos.png"}
+    };
+
+    private readonly Dictionary<string, MudTheme> _themes = new()
+    {
+        { "Default", MyTheme.DefaultTheme },
+        { "Cyan", MyTheme.CyanTheme },
+        { "Red", MyTheme.RedTheme },
+        { "Indigo", MyTheme.IndigoTheme },
+        { "Deep Purple", MyTheme.DeepPurpleTheme },
+        { "Teal", MyTheme.TealTheme },
+        { "Orange", MyTheme.OrangeTheme },
+        { "BlueGray", MyTheme.BlueGrayTheme}
+    };
+}

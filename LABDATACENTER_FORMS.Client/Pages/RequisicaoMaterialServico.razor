@@ -1,0 +1,175 @@
+﻿@page "/RequisicaoMaterialServico"
+
+@inject FormDataService formDataService
+@inject ISnackbar Snackbar
+
+<PageTitle>Requisição de Material/Serviço</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Requisição de Material/Serviço</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    
+<MudForm @ref="form" Model="@formData" @bind-IsValid="@success">
+
+    <MudTextField Class="d-flex mt-6" id="fornecedor" @bind-Value="formData.Fornecedor" Label="Fornecedor" 
+        Variant="Variant.Outlined" Required="true" RequiredError="Indique um fornecedor"/>
+
+    <MudTextField Class="d-flex mt-10" id="nifFornecedor" @bind-Value="formData.NifFornecedor" Label="NIF do Fornecedor"
+       HelperText="Número de 9 dígitos, começando de 1-9." Variant="Variant.Outlined" InputType="InputType.Number"
+       For="@(() => formData.NifFornecedor)" Validation="@((string nif) => IsValidNIF(nif) ? "" : "NIF inválido.")"  />
+
+    <MudPaper Elevation="0">
+            <MudText Typo="Typo.body1" Class="d-flex mt-10 ps-3 input-text-color">Tipo de Requisição</MudText>
+
+        <MudToggleGroup T="string" Class="mt-3" Color="Color.Primary" id="tipoRequisicao" @bind-Value="formData.TipoRequisicao" Variant="Variant.Outlined">
+            <MudToggleItem Value=@("Material") />
+            <MudToggleItem Value=@("Servico" ) />
+        </MudToggleGroup>
+    </MudPaper>
+
+    @if (formData.TipoRequisicao == "Material")
+    {
+        <MudTextField Class="d-flex mt-10" id="descricaoMaterial" @bind-Value="formData.DescricaoMaterial" Label="Descrição do Material"
+            Variant="Variant.Outlined"  />
+    }
+
+    else if (formData.TipoRequisicao == "Servico")
+    {
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.CodigoServico" Variant="Variant.Outlined"
+            Label="Seleção Código Serviço" AnchorOrigin="Origin.BottomCenter" Required="true">
+            <MudSelectItem Value="@("AA343423424434")" />
+        </MudSelect>
+    }
+
+    <MudTextField Class="d-flex mt-10" Name="localEntrega" @bind-Value="formData.LocalEntrega" Label="Local de Entrega"
+            Variant="Variant.Outlined" Lines="3"/>
+
+    <MudNumericField Class="d-flex mt-10" id="precoSemIva" @bind-Value="formData.PrecoSemIva" Label="Preço (S/IVA)" Variant="Variant.Outlined"
+                         Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EuroSymbol" HideSpinButtons="true" Min="0" Culture="@_pt" />
+
+    <MudNumericField Class="d-flex mt-10 mb-3" id="portesSemIva" @bind-Value="formData.PortesSemIva" Label="Portes (S/IVA)" Variant="Variant.Outlined"
+            Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EuroSymbol" HideSpinButtons="true" Min="0" Culture="@_pt"/>
+
+        <MudPaper Class="mt-10 pa-4 mud-paper-outline " Elevation="0" Outlined="true">
+        <MudText Typo="Typo.body1" Class="input-text-color">Adiantamento</MudText>
+        <MudItem Class="pa-3">
+            <MudRadioGroup Name="adiantamento" @bind-Value="formData.Adiantamento">
+                    <MudRadio Value=@("Sem adiantamento") Color="Color.Info">Sem adiantamento</MudRadio>
+                    <MudRadio Value=@("Com adiantamento") Color="Color.Info">Com adiantamento</MudRadio>
+            </MudRadioGroup>
+        </MudItem>
+
+
+            @if (formData.Adiantamento == "Com adiantamento")
+            {
+                <MudTextField Class="d-flex mt-3 pt-0 animated-textfield slideDown" id="adiantamentoDescricao" @bind-Value="formData.AdiantamentoDescricao"
+                              Label="Forma de Adiantamento" Variant="Variant.Text" Style="animation: slideDown 0.5s ease-in-out;" />
+            }
+            else
+            {
+                <MudTextField Class="d-flex mt-3 pa-0 animated-textfield slideUp" id="adiantamentoDescricao" @bind-Value="formData.AdiantamentoDescricao"
+                              Label="Forma de Adiantamento" Variant="Variant.Text" Required="false" Style="animation: slideUp 0.5s ease-in-out;" />
+            }
+
+    </MudPaper>
+
+    <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.CentroDeCustoOuPep" Variant="Variant.Outlined"
+               Label="Centro de Custo ou PEP" AnchorOrigin="Origin.BottomCenter" Required="true">
+        <MudSelectItem Value="@("AAA")" />
+    </MudSelect>
+
+    <MudTextField Class="d-flex mt-10" id="numeroOrdemInvestimento" @bind-Value="formData.NumeroOrdemInvestimento" Label="Número Ordem Investimento" 
+        Variant="Variant.Outlined" />
+
+    <MudTextField Class="d-flex mt-10" id="justificacao" @bind-Value="formData.Justificacao" Label="Justificação" Variant="Variant.Outlined" 
+        Lines="3" HelperText="Introduza a sua resposta" />
+
+     <MudStack Style="width: 100%">
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                       AppendMultipleFiles
+                       OnFilesChanged="OnInputFileChanged"
+                       Hidden="@false"
+                       InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+                       InputStyle="opacity:0"
+                       @ondragenter="@SetDragClass"
+                       @ondragleave="@ClearDragClass"
+                       @ondragend="@ClearDragClass">
+            <ActivatorContent>
+                <MudPaper Height="150px"
+                          Outlined="true"
+                          Class="@_dragClass">
+                    <MudText Typo="Typo.h6">
+                        Anexos - arraste para aqui ficheiros ou clique neste campo
+                    </MudText>
+                    @foreach (var file in _fileNames)
+                    {
+                        <MudChip T="string" Color="Color.Dark" Text="@file" />
+                    }
+                </MudPaper>
+
+                <MudToolBar Gutters="false" Class="relative d-flex justify-end gap-4 z-30">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">Selecione os ficheiros</MudButton>
+                    <MudButton OnClick="@LoadFiles"
+                               Color="Color.Primary"
+                               Disabled="@(!_fileNames.Any())"
+                               Variant="Variant.Filled">
+                        Upload
+                    </MudButton>
+                    <MudButton OnClick="@Clear"
+                               Color="Color.Error"
+                               Disabled="@(!_fileNames.Any())"
+                               Variant="Variant.Filled">
+                        Clear
+                    </MudButton>
+                </MudToolBar>
+            </ActivatorContent>
+        </MudFileUpload>
+    </MudStack>
+
+    <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="openConfirmationDialog"
+                Color="@(IsFormFilled() ? Color.Success : Color.Error)" FullWidth="true">Submeter</MudButton>
+
+
+    <MudDialog @bind-Visible="showConfirmationDialog">
+        <TitleContent>
+            <MudText Typo="Typo.h5">Confirme a submissão</MudText>
+        </TitleContent>
+        <DialogContent>
+                <MudText Class="mb-3" Typo="Typo.h6">Resumo da informação a ser submetida:</MudText>
+                <MudText Class="mb-1">Fornecedor: @formData.NifFornecedor</MudText>
+                <MudText Class="mb-1">Tipo de Requisição: @formData.TipoRequisicao</MudText>
+                <MudText Class="mb-1">
+                    @if (formData.TipoRequisicao == "Material")
+                    {
+                        <MudText>Descrição do Material: @formData.DescricaoMaterial</MudText>
+                    }
+                    else if (formData.TipoRequisicao == "Servico")
+                    {
+                        <MudText>Código Serviço: @formData.CodigoServico</MudText>
+                    }
+                </MudText>
+                <MudText Class="mb-1">Local de entrega: @formData.LocalEntrega</MudText>
+                <MudText Class="mb-1">Preço (S/IVA): @formData.PrecoSemIva</MudText>
+                <MudText Class="mb-1">Portes (S/IVA): @formData.PortesSemIva</MudText>
+                <MudText Class="mb-1">Adiantamento: @formData.Adiantamento</MudText>
+                <MudText Class="mb-1">
+                    @if (formData.Adiantamento == "Com adiantamento")
+                    {
+                        <MudText>Forma de adiantamento: @formData.AdiantamentoDescricao</MudText>
+                    }
+                </MudText>
+                <MudText Class="mb-1">Centro de custo ou PEP: @formData.CentroDeCustoOuPep</MudText>
+                <MudText Class="mb-1">Número Ordem Investimento: @formData.NumeroOrdemInvestimento</MudText>
+                <MudText Class="mb-1">Justificação: @formData.Justificacao</MudText>
+            <!-- Add more fields as needed -->
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="HandleSubmit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">Confirmar</MudButton>
+            <MudButton OnClick="() => showConfirmationDialog = false" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">Cancelar</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+</MudForm>
+</MudPaper>

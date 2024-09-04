@@ -1,0 +1,69 @@
+﻿@page "/AvaliacaoEficacia"
+
+@inject FormReclamacoesDataService formReclamacoesDataService
+@inject ISnackbar Snackbar
+
+<PageTitle>AvaliacaoEficacia</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">5. Avaliação da Eficácia</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+
+    <MudForm @ref="form" Model="@formReclamacoesData">
+
+        <MudPaper Elevation="0" Class="mt-10 pa-4 mud-paper-outline" Outlined="true">
+            <MudText Class="pb-4" Style="color: gray" Typo="Typo.body1">Ação foi eficaz?</MudText>
+            <MudItem Class="d-flex gap-4 pa-0">
+                <MudPaper Class="mt-2 pa-2 mud-paper-outline " Elevation="0" Outlined="true" Style="flex: 1;">
+                    <MudItem Class="pa-2">
+                        <MudRadioGroup Name="acaoEficacia" @bind-Value="formReclamacoesData.AcaoEficacia">
+                            <MudRadio Value=@("Sim") Color="Color.Info">Sim</MudRadio>
+                            <MudRadio Value=@("Não") Color="Color.Info">Não</MudRadio>
+                        </MudRadioGroup>
+                    </MudItem>
+                </MudPaper>
+                <MudPaper Class=" mt-2 pa-4 mud-paper-outline " Elevation="0" Outlined="true" Style="flex: 2;">
+                    <MudTextField Label="Nova ação RNC/ACP Número" @bind-Value="formReclamacoesData.NovaAcao" Required="false" Placeholder="" />
+                </MudPaper>
+            </MudItem>
+        </MudPaper>
+
+        <MudTextField Class="d-flex mt-10" @bind-Value="formReclamacoesData.AcaoEficaciaObservacoes" Label="Observações"
+                      Variant="Variant.Outlined" Lines="4" Placeholder="" />
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formReclamacoesData.AvaliacaoEficaciaResponsavel" Variant="Variant.Outlined"
+                   Label="Avaliado por" AnchorOrigin="Origin.BottomCenter" Required="true" Placeholder="Nome e Função">
+            <MudSelectItem Value="@("Responsável 1")" />
+            <MudSelectItem Value="@("Responsável 2")" />
+            <MudSelectItem Value="@("Responsável 3")" />
+        </MudSelect>
+
+        <MudDatePicker Label="Data" Class="d-flex mt-10" @bind-Date="formReclamacoesData.DataAvaliacaoEficacia" Variant="Variant.Outlined"
+                       Required="false"></MudDatePicker>
+
+        <MudPaper Elevation="0" Class="mt-10 pa-4 mud-paper-outline" Outlined="true">
+            <MudText Class="pb-4" Style="color: gray" Typo="Typo.body1">FINAL</MudText>
+            <MudDatePicker Class="mt-4" Color="Color.Info" @bind-DateOnly="formReclamacoesData.DataFechoFinal"
+                           Label="Data Fecho do RNC / ACP" Required="true" Variant="Variant.Outlined"
+                           Editable="false" DateFormat="dd.MM.yyyy" />
+
+            <MudSelect Class="d-flex mt-4" T="string" @bind-Value="formReclamacoesData.CcAvaliacaoEficacia" Variant="Variant.Outlined"
+                       Label="Com CC de:" AnchorOrigin="Origin.BottomCenter" Required="false">
+                <MudSelectItem Value="@("Responsável 1")" />
+                <MudSelectItem Value="@("Responsável 2")" />
+                <MudSelectItem Value="@("Responsável 3")" />
+            </MudSelect>
+        </MudPaper>
+
+
+        </MudForm>
+
+    <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="HandleSubmit"
+               Color="Color.Success" FullWidth="true">Submeter</MudButton>
+
+
+
+
+</MudPaper>

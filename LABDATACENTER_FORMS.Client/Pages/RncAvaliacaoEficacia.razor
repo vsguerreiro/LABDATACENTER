@@ -1,0 +1,66 @@
+﻿@page "/rncavaliacaoeficacia"
+
+@inject FormRelatorioNaoConformidadeService formRelatorioNaoConformidadeService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>AvaliacaoEficacia</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">5. Avaliação da Eficácia</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    <MudForm @ref="form" Model="@formRelatorioNaoConformidade" @bind-IsValid="@success">
+
+        <MudPaper Class="mt-6 pa-4 mud-paper-outline " Elevation="0" Outlined="true">
+            <MudText Typo="Typo.body1" Class="input-text-color">Ação foi eficaz?</MudText>
+            <MudItem Class="pa-3">
+                <MudRadioGroup Name="adiantamento" @bind-Value="formRelatorioNaoConformidade.EficaciaAcao">
+                    <MudRadio Value=@("Sim") Color="Color.Info">Sim</MudRadio>
+                    <MudRadio Value=@("Não") Color="Color.Info">Não</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+
+            @if (formRelatorioNaoConformidade.EficaciaAcao == "Não")
+            {
+                <MudTextField Class="d-flex mt-3 pt-0 animated-textfield slideDown" @bind-Value="formRelatorioNaoConformidade.NovaAcaoRnc"
+                        Label="Nova ação RNC / ACP" Variant="Variant.Text" Style="animation: slideDown 0.5s ease-in-out;" />
+            }
+            else
+            {
+                <MudTextField Class="d-flex mt-3 pa-0 animated-textfield slideUp" @bind-Value="formRelatorioNaoConformidade.NovaAcaoRnc"
+                        Label="Nova ação RNC / ACP" Variant="Variant.Text" Style="animation: slideUp 0.5s ease-in-out;" />
+            }
+        </MudPaper>
+
+        <MudTextField Class="d-flex mt-10" @bind-Value="formRelatorioNaoConformidade.AvaliacaoEficaciaObservacoes" Label="Observações"
+                      Variant="Variant.Outlined" Lines="8" Placeholder="" />
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formRelatorioNaoConformidade.AvaliacaoEficaciaAvaliadoPor" Variant="Variant.Outlined"
+                    Label="Aprovado por" AnchorOrigin="Origin.BottomCenter" Required="true">
+            <MudSelectItem Value="@("Responsável 1")" />
+            <MudSelectItem Value="@("Responsável 2")" />
+            <MudSelectItem Value="@("Responsável 3")" />
+        </MudSelect>
+
+        <MudDatePicker Class="mt-10" Color="Color.Info" @bind-DateOnly="formRelatorioNaoConformidade.AvaliacaoEficaciaData"
+                    Label="Data" Required="true" Variant="Variant.Outlined"
+                    Editable="false" DateFormat="dd.MM.yyyy" />
+
+        <MudPaper Elevation="0" Class="mt-10 pa-4 mud-paper-outline" Outlined="true">
+            <MudText Class="pb-4" Style="color: gray" Typo="Typo.body1">Data de Fecho do RNC / ACP</MudText>
+
+            <MudDatePicker Class="mt-2" Color="Color.Info" @bind-DateOnly="formRelatorioNaoConformidade.AvaliacaoEficaciaDataFinal"
+                    Label="Data" Required="true" Variant="Variant.Outlined"
+                    Editable="false" DateFormat="dd.MM.yyyy" />
+
+        </MudPaper>
+
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="HandleSubmit"
+                   Color="Color.Success" FullWidth="true">Submeter</MudButton>
+
+    </MudForm>
+
+
+</MudPaper>

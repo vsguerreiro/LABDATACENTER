@@ -1,0 +1,91 @@
+﻿@page "/AluguerViatura"
+
+@inject FormDataService formDataService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>AluguerViatura</PageTitle>
+
+<MudTimePicker></MudTimePicker>
+
+<MudPaper Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Aluguer de Viatura</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    <MudForm @ref="form" Model="@formData" @bind-IsValid="@success">
+
+    <MudTextField Class="d-flex mt-6" id="localEntrega" @bind-Value="formData.LocalEntrega" Label="Local da Deslocação"
+        Variant="Variant.Outlined" Margin="Margin.Normal" Required="true" RequiredError="É necessário indicar um local de deslocação" 
+        HelperText="Nacional / Internacional" HelperTextOnFocus="false" />
+
+        <MudPaper Elevation="0" Class="mt-10 pa-4 mud-paper-outline" Outlined="true">
+        <MudText Class="pb-4" Style="color: gray" Typo="Typo.body1">Período de Aluguer</MudText>
+
+            <MudGrid Class="pa-4" Style="display: flex; justify-content: center; gap: 20px;">
+
+                <MudPaper Elevation="0" Class="mt-4 pa-2 mud-paper-outline" Outlined="true" Style="flex: 1;">
+                    <MudText Class="pb-4 pa-4 input-text-color" Style="color: gray" Typo="Typo.body1">Levantamento</MudText>
+                    <MudDatePicker Label="Data" @bind-Date="_pickupDate" Variant="Variant.Outlined" Required="true"></MudDatePicker>
+                    <MudTimePicker Label="Hora de levantamento" @bind-Time="_pickupTime" Editable="false" Variant="Variant.Outlined" Required="false"></MudTimePicker>
+            </MudPaper>
+
+                <MudPaper Elevation="0" Class="mt-4 pa-2 mud-paper-outline" Outlined="true" Style="flex: 1;">
+                    <MudText Class="pb-4 pa-4" Style="color: gray" Typo="Typo.body1">Entrega</MudText>
+                    <MudDatePicker Label="Data de entrega" @bind-Date="_returnDate" Variant="Variant.Outlined" Required="true"></MudDatePicker>
+                    <MudTimePicker Label="Hora de entrega" @bind-Time="_returnTime" Variant="Variant.Outlined" Required="false"></MudTimePicker>
+            </MudPaper>
+        </MudGrid>
+
+   </MudPaper>
+
+    <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.ModeloViatura" Variant="Variant.Outlined"
+                Label="Modelo da Viatura" AnchorOrigin="Origin.BottomCenter" Required="true">
+        <MudSelectItem Value="@("Gasolina")" />
+    </MudSelect>
+
+    <MudTextField Class="d-flex mt-10" @bind-Value="formData.NomeCondutores" Label="Nome do(s) condutor(es)" 
+        Variant="Variant.Outlined" Lines="2" />
+
+    <MudTextField Class="d-flex mt-10" @bind-Value="formData.CcCondutores" Label="Cartão(ões) de Cidadão" 
+        Variant="Variant.Outlined" Lines="2" />
+
+    <MudTextField Class="d-flex mt-10" @bind-Value="formData.ContatoCondutores"
+        Label="Contato dos Condutores" Variant="Variant.Outlined" Lines="2" />
+
+    <MudTextField Class="d-flex mt-10" @bind-Value="formData.Justificacao" Label="Justificação" 
+        Variant="Variant.Outlined" Lines="3" HelperText="Introduza a sua resposta" />
+
+    <MudSelect Class="d-flex mt-10 mb-10" T="string" @bind-Value="formData.CentroDeCustoOuPep" Variant="Variant.Outlined"
+               Label="Centro de Custo ou PEP" AnchorOrigin="Origin.BottomCenter" Required="true">
+        <MudSelectItem Value="@("AAA")" />
+    </MudSelect>
+
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="openConfirmationDialog"
+                   Color="@(IsFormFilled() ? Color.Success : Color.Error)" FullWidth="true">Submeter</MudButton>
+
+    <MudDialog @bind-Visible="showConfirmationDialog">
+        <TitleContent>
+            <MudText Typo="Typo.h5">Confirme a submissão</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudText Class="mb-3" Typo="Typo.h6">Resumo da informação a ser submetida:</MudText>
+                <MudText Class="mb-1">Local da Deslocação: @formData.LocalEntrega</MudText>
+                <MudText Class="mb-1">Levantamento: @_pickupDate - @_pickupTime</MudText>
+                <MudText Class="mb-1">Entrega: @_returnDate - @_returnTime</MudText>
+                <MudText Class="mb-1">Modelo da viatura: @formData.ModeloViatura</MudText>
+                <MudText Class="mb-1">Nome do(s) condutor(es): @formData.NomeCondutores</MudText>
+                <MudText Class="mb-1">Cartão(ões) de Cidadão: @formData.CcCondutores</MudText>
+                <MudText Class="mb-1">Contato dos Condutores: @formData.ContatoCondutores</MudText>
+                <MudText Class="mb-1">Justificação: @formData.Justificacao</MudText>
+                <MudText Class="mb-1">Centro de custo ou PEP: @formData.CentroDeCustoOuPep</MudText>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="HandleSubmit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">Confirmar</MudButton>
+            <MudButton OnClick="() => showConfirmationDialog = false" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">Cancelar</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+</MudForm>
+</MudPaper>

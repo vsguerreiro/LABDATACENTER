@@ -1,0 +1,60 @@
+﻿@page "/Adiantamento"
+
+@inject FormDataService formDataService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Adiantamento</PageTitle>
+
+<MudPaper HtmlTag="h1" Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Adiantamento</MudText>
+</MudPaper>
+
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+<MudForm @ref="form" Model="@formData" @bind-IsValid="@success">
+ 
+    <MudNumericField Class="d-flex mt-6" id="valor" @bind-Value="formData.ValorDoAdiantamento" 
+            Label="Valor do Adiantamento" Variant="Variant.Outlined" HideSpinButtons="true" Min="0"
+            Required="true" RequiredError="É necessário indicar um valor" Culture="@_pt"/>
+    
+    <MudTextField Class="d-flex mt-10" id="justificacao" @bind-Value="formData.Justificacao" 
+            Label="Justificação" Variant="Variant.Outlined" Required="true" RequiredError="É necessário apresentar uma justificação" />
+
+    <MudDatePicker Class="d-flex mt-10" Color="Color.Info" id="dataPretendida" @bind-Date="formData.DataPretendida"
+                   Label="Data pretendida para a transferência" Required="true" Variant="Variant.Outlined"
+            HelperText="Existe uma demora de aproximadamente 2 dias entre a aprovação, autorização e efectivação da transferência." 
+            Editable="false" DateFormat="dd.MM.yyyy" />
+ 
+    <MudSelect Class="d-flex mt-10 mb-10" T="string" @bind-Value="formData.CentroDeCustoOuPep" Variant="Variant.Outlined"
+            Label="Centro de Custo ou PEP" AnchorOrigin="Origin.BottomCenter" Required="true" >
+        <MudSelectItem Value="@("AAA")" />
+    </MudSelect>
+
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="openConfirmationDialog"
+                   Color="@(IsFormFilled() ? Color.Success : Color.Error)" FullWidth="true">Submeter</MudButton>
+
+@*     <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="HandleSubmit"
+        Color="Color.Success" FullWidth="true">Submeter</MudButton> *@
+
+        <MudDialog @bind-Visible="showConfirmationDialog">
+            <TitleContent>
+                <MudText Typo="Typo.h5">Confirme a submissão</MudText>
+            </TitleContent>
+            <DialogContent>
+                <MudText Class="mb-3" Typo="Typo.h6">Resumo da informação a ser submetida:</MudText>
+                <MudText Class="mb-1"><i>Valor do adiantamento</i>: @formData.ValorDoAdiantamento</MudText>
+                <MudText Class="mb-1">Justificação: @formData.Justificacao</MudText>
+                <MudText Class="mb-1">Data pretendida: @formData.DataPretendida</MudText>
+                <MudText Class="mb-1">Centro de custo ou PEP: @formData.CentroDeCustoOuPep</MudText>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="HandleSubmit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">Confirmar</MudButton>
+                <MudButton OnClick="() => showConfirmationDialog = false" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">Cancelar</MudButton>
+            </DialogActions>
+        </MudDialog>
+
+
+</MudForm>
+</MudPaper>
+

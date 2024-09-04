@@ -1,0 +1,75 @@
+﻿@page "/MarcacaoHotel"
+
+@inject FormDataService formDataService
+@inject ISnackbar Snackbar
+
+<PageTitle>MarcacaoHotel</PageTitle>
+
+<MudPaper Elevation="2" Class="mt-10 pa-4 mud-paper-header">
+    <MudText Typo="Typo.h2" Align="Align.Center">Marcação de Hotel</MudText>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="bg-white pa-4 mt-8">
+    <MudForm @ref="form" Model="@formData" @bind-IsValid="@success">
+
+        <MudTextField Class="d-flex mt-6" @bind-Value="formData.LocalEntrega" Label="Local da Estadia"
+                      Variant="Variant.Outlined" Margin="Margin.Normal" Required="true" RequiredError="É necessário indicar um local de estadia" />
+
+        <MudTextField Class="d-flex mt-10" @bind-Value="formData.HotelPreferencia" Label="Hotel de Preferência"
+                      Variant="Variant.Outlined" Margin="Margin.Normal" Required="true" RequiredError="É necessário indicar um ou mais hoteis" />
+
+        <MudTextField Class="d-flex mt-10" @bind-Value="formData.NomeCondutores" Label="Nome da Reserva"
+                      Variant="Variant.Outlined" Margin="Margin.Normal" Required="true" 
+                      RequiredError="É necessário indicar em que nome se pretende a reserva" />
+
+        <MudTextField Class="d-flex mt-10" @bind-Value="formData.NumeroFuncionario" Label="Número de Funcionário"
+                      Variant="Variant.Outlined" Margin="Margin.Normal" Required="true" RequiredError="É necessário o número do funcionário" />
+
+        <MudPaper Elevation="0" Class="mt-10">
+
+        <MudItem>
+                <MudDateRangePicker @bind-DateRange="_dateRange" Color="Color.Info" Label="Estadia" Variant="Variant.Outlined" Margin="Margin.Normal" />
+            </MudItem>
+        </MudPaper>
+
+        <MudSelect Class="d-flex mt-10" T="string" @bind-Value="formData.CentroDeCustoOuPep"
+                   Label="Centro de Custo ou PEP" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Normal" Required="true">
+            <MudSelectItem Value="@("AAA")" />
+        </MudSelect>
+
+        <MudTextField Class="d-flex mt-10" id="justificacao" @bind-Value="formData.Justificacao" Label="Observações"
+                      Variant="Variant.Outlined" Margin="Margin.Normal" Lines="3" HelperText="Introduza a sua resposta" />
+
+@*         <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="HandleSubmit"
+                   Color="Color.Success" FullWidth="true">Submeter</MudButton>
+ *@
+        <MudButton Class="d-flex mt-10 mb-6" Variant="Variant.Filled" OnClick="openConfirmationDialog"
+                   Color="@(IsFormFilled() ? Color.Success : Color.Error)" FullWidth="true">Submeter</MudButton>
+
+
+        <MudDialog @bind-Visible="showConfirmationDialog">
+            <TitleContent>
+                <MudText Typo="Typo.h5">Confirme a submissão</MudText>
+            </TitleContent>
+            <DialogContent>
+                <MudText Class="mb-3" Typo="Typo.h6">Resumo da informação a ser submetida:</MudText>
+                <MudText Class="mb-1">Local da Estadia: @formData.LocalEntrega</MudText>
+                <MudText Class="mb-1">Hotel de Preferênca: @formData.HotelPreferencia</MudText>
+                <MudText Class="mb-1">Nome da Reserva: @formData.NomeCondutores</MudText>
+                <MudText Class="mb-1">Número de Funcionário: @formData.NumeroFuncionario</MudText>
+                <MudText Class="mb-1">Centro de custo ou PEP: @formData.CentroDeCustoOuPep</MudText>
+                <MudText Class="mb-1">Estadia: @(_dateRange != null ? $"{_dateRange.Start:dd/MM/yyyy} - {_dateRange.End:dd/MM/yyyy}" : "Não definida")</MudText>
+                <MudText Class="mb-1">Observações: @formData.Justificacao</MudText>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="HandleSubmit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">Confirmar</MudButton>
+                <MudButton OnClick="() => showConfirmationDialog = false" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">Cancelar</MudButton>
+            </DialogActions>
+        </MudDialog>
+
+
+
+
+
+    </MudForm>
+</MudPaper>

@@ -1,0 +1,80 @@
+/*
+	This CSS file matches the color scheme from MudBlazor to Bootstrap when utilized for authentication.
+	The file remains available at all times for demonstration purposes,
+	but it is exclusively employed in the 'App.razor' component when authentication is enabled.
+*/
+
+.btn-primary {
+    text-transform: uppercase;
+    --bs-btn-bg: var(--mud-palette-primary) !important;
+    --bs-btn-hover-bg: var(--mud-palette-primary-darken) !important;
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--mud-palette-primary) !important;
+}
+
+.nav {
+    --bs-nav-link-color: var(--mud-palette-primary) !important;
+    --bs-nav-link-hover-color: var(--mud-palette-primary-darken) !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.page-content {
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
+}
+
+.mud-paper-header {
+    background-color: var(--mud-palette-secondary);
+    color: var(--mud-palette-secondary-text);
+}
+
+.mud-paper-outline {
+    border-color: var(--mud-palette-lines-inputs);
+}
+
+.input-text-color {
+    color: var(--mud-palette-text-secondary);
+}
+
+@keyframes slideDown {
+    from {
+        max-height: 0;
+    }
+
+    to {
+        max-height: 210px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        max-height: 210px;
+    }
+
+    to {
+        max-height: 0;
+    }
+}
+
+.animated-textfield {
+    overflow: hidden;
+    max-height: 0; /* Start with max-height 0 */
+    animation-fill-mode: forwards;
+}
+
+/* Apply slideDown when 'Outro' is selected */
+.slideDown {
+    animation: slideDown 0.5s ease-in-out forwards;
+}
+
+/* Apply slideUp by default */
+.slideUp {
+    animation: slideUp 0.5s ease-in-out forwards;
+}
